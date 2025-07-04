@@ -1,5 +1,5 @@
 The following third-party software is used by and included in **Mongodb Compass**.
-This document was automatically generated on Sun Jun 29 2025.
+This document was automatically generated on Fri Jul 04 2025.
 
 ## List of dependencies
 
@@ -63,7 +63,7 @@ This document was automatically generated on Sun Jun 29 2025.
 | **[@babel/traverse](#cbf060c0be202d0c980a972f5d555221bd01e3010bb774e5a2e5671e4ebbc78a)**                                    | 7.27.1       | MIT                                 |
 | **[@babel/types](#9021b399ca3cefdefb2e38ca064c3f445f1976553f8c3aa6ae92a051f1644a9f)**                                       | 7.27.1       | MIT                                 |
 | **[@codemirror/autocomplete](#62d2362c07f0c11664969b60d0d7c3e081905838b8994675aaf0e6c67baf358d)**                           | 6.17.0       | MIT                                 |
-| **[@codemirror/commands](#e12a76404dd2d66430f2dff53a430449896e9b5c2558779497b855ba2ab9326a)**                               | 6.1.2        | MIT                                 |
+| **[@codemirror/commands](#2f61f8e56ba96e99b4f9ceacf0af3ddae5edec5e935a2a5f9af4546e36c9767e)**                               | 6.8.1        | MIT                                 |
 | **[@codemirror/lang-javascript](#d5fb6a843784efdc3ec06ae43bdf3ca13ec93a6bce802995a47cf7bddafc9628)**                        | 6.1.2        | MIT                                 |
 | **[@codemirror/lang-json](#8681100c5ce2bab822c877bc288cac59b84b13ff17735c301d4e1c7fa5924720)**                              | 6.0.1        | MIT                                 |
 | **[@codemirror/language](#5528845a8e28aec6e48cb76145e25db0921b87499dc07ab852cdeca48b9f87a6)**                               | 6.3.2        | MIT                                 |
@@ -290,6 +290,7 @@ This document was automatically generated on Sun Jun 29 2025.
 | **[highlight.js](#2c60adc5db39462d0c2ff2176f71b4694ffe5060c53b1aa4f6f670e269ec1905)**                                       | 11.5.1       | BSD-3-Clause                        |
 | **[highlightjs-graphql](#11efa7dc664403503100672cb251f0bac920e5f8ac3847419583e9318faf451d)**                                | 1.0.2        | MIT                                 |
 | **[hoist-non-react-statics](#48f3f00d384ea079099b9b701c304b7e276313a616f8ad0084f41ea563f876af)**                            | 3.3.2        | BSD-3-Clause                        |
+| **[html-to-image](#e92d76b9cb3028d464f1c9ce528f1ee9c0f522d93232e0638f70247c0d055d16)**                                      | 1.11.11      | MIT                                 |
 | **[http-errors](#63ffbc6de129d4a36e73df25da1f31ee2a7da3b1060e1b5b3c2b5cad89ca04c7)**                                        | 2.0.0        | MIT                                 |
 | **[http-proxy-agent](#bd2b92f8eb0b68f6d255c316d3cd8c9aff9984e8bcb584d47613c422de726405)**                                   | 7.0.2        | MIT                                 |
 | **[https-proxy-agent](#b6aac91220cd7856e313022f6bc340440996660bbcd315ce14638d6daa8a33c6)**                                  | 7.0.6        | MIT                                 |
@@ -5967,9 +5968,9 @@ License files:
       OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
       THE SOFTWARE.
 
-<a id="e12a76404dd2d66430f2dff53a430449896e9b5c2558779497b855ba2ab9326a"></a>
+<a id="2f61f8e56ba96e99b4f9ceacf0af3ddae5edec5e935a2a5f9af4546e36c9767e"></a>
 
-### [@codemirror/commands](https://www.npmjs.com/package/@codemirror/commands) (version 6.1.2)
+### [@codemirror/commands](https://www.npmjs.com/package/@codemirror/commands) (version 6.8.1)
 
 License tags: MIT
 
@@ -5979,7 +5980,7 @@ License files:
 
       MIT License
 
-      Copyright (C) 2018-2021 by Marijn Haverbeke <marijnh@gmail.com> and others
+      Copyright (C) 2018-2021 by Marijn Haverbeke <marijn@haverbeke.berlin> and others
 
       Permission is hereby granted, free of charge, to any person obtaining a copy
       of this software and associated documentation files (the "Software"), to deal
@@ -20640,6 +20641,38 @@ License files:
       ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
       (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
       SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+<a id="e92d76b9cb3028d464f1c9ce528f1ee9c0f522d93232e0638f70247c0d055d16"></a>
+
+### [html-to-image](https://www.npmjs.com/package/html-to-image) (version 1.11.11)
+
+License tags: MIT
+
+License files:
+
+- LICENSE:
+
+      MIT License
+
+      Copyright (c) 2017-2023 W.Y.
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
 
 <a id="63ffbc6de129d4a36e73df25da1f31ee2a7da3b1060e1b5b3c2b5cad89ca04c7"></a>
 
