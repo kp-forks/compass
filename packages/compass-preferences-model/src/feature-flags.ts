@@ -26,6 +26,7 @@ export type FeatureFlags = {
   enableDataModeling: boolean;
   enableIndexesGuidanceExp: boolean;
   showIndexesGuidanceVariant: boolean;
+  enableContextMenus: boolean;
 };
 
 export const featureFlags: Required<{
@@ -81,7 +82,7 @@ export const featureFlags: Required<{
   },
 
   showDisabledConnections: {
-    stage: 'development',
+    stage: 'released',
     description: {
       short:
         'Show clusters that are not in a "connectable" state in Atlas Cloud',
@@ -89,14 +90,14 @@ export const featureFlags: Required<{
   },
 
   enableRollingIndexes: {
-    stage: 'development',
+    stage: 'released',
     description: {
       short: 'Enable creating indexes with the rolling build in Atlas Cloud',
     },
   },
 
   enableGlobalWrites: {
-    stage: 'development',
+    stage: 'released',
     description: {
       short: 'Enable Global Writes tab in Atlas Cloud',
     },
@@ -138,6 +139,13 @@ export const featureFlags: Required<{
     description: {
       short:
         'Used to check if user is in the Indexes Guidance Experiment Variant',
+    },
+  },
+
+  enableContextMenus: {
+    stage: 'development',
+    description: {
+      short: 'Enable context (right-click) menus',
     },
   },
 };
