@@ -377,7 +377,6 @@ This document was automatically generated on Tue Apr 07 2026.
 | **[leaflet](#0c77955158defdd249f5abf69232ca350038122d4fc768826d9d79ce402761f4)**                                            | 1.5.1              | BSD-2-Clause                        |
 | **[lodash-es](#dc01c5e6fde0737bcb22063adffcc9ce21afc19e9f408f5d22878215419c3d25)**                                          | 4.18.1             | MIT                                 |
 | **[lodash.merge](#996e40d63a94f1b8693d7c81e0cdfb874c6432d6bbd675976fc1b6b13652c8db)**                                       | 4.6.2              | MIT                                 |
-| **[lodash](#22f51d3e8133cb84c9c410b8485c738362f6bf7ad6e2057f6eabc4b65442425f)**                                             | 4.17.23            | MIT                                 |
 | **[lodash](#02c5607a9d3316c6c04fcbf8d5fb61810668de71f499205765e125fd4829cd17)**                                             | 4.18.1             | MIT                                 |
 | **[lottie-web](#1f97ad7c365ecbd3628b72df96e42dada0d2e9a4aa6d79b66e93911bdebb6ccd)**                                         | 5.13.0             | MIT                                 |
 | **[lru-cache](#c72f841ac82faee207770e04c12f44202825ab841319ffb4cd7764a76731e4bf)**                                          | 11.2.6             | BlueOak-1.0.0                       |
@@ -26590,64 +26589,6 @@ License files:
 <a id="996e40d63a94f1b8693d7c81e0cdfb874c6432d6bbd675976fc1b6b13652c8db"></a>
 
 ### [lodash.merge](https://www.npmjs.com/package/lodash.merge) (version 4.6.2)
-
-License tags: MIT
-
-License files:
-
-- LICENSE:
-
-      Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
-
-      Based on Underscore.js, copyright Jeremy Ashkenas,
-      DocumentCloud and Investigative Reporters & Editors <http://underscorejs.org/>
-
-      This software consists of voluntary contributions made by many
-      individuals. For exact contribution history, see the revision history
-      available at https://github.com/lodash/lodash
-
-      The following license applies to all parts of this software except as
-      documented below:
-
-      ====
-
-      Permission is hereby granted, free of charge, to any person obtaining
-      a copy of this software and associated documentation files (the
-      "Software"), to deal in the Software without restriction, including
-      without limitation the rights to use, copy, modify, merge, publish,
-      distribute, sublicense, and/or sell copies of the Software, and to
-      permit persons to whom the Software is furnished to do so, subject to
-      the following conditions:
-
-      The above copyright notice and this permission notice shall be
-      included in all copies or substantial portions of the Software.
-
-      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-      EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-      MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-      LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-      OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-      WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-      ====
-
-      Copyright and related rights for sample code are waived via CC0. Sample
-      code is defined as all source code displayed within the prose of the
-      documentation.
-
-      CC0: http://creativecommons.org/publicdomain/zero/1.0/
-
-      ====
-
-      Files located in the node_modules and vendor directories are externally
-      maintained libraries used by this software which have their own
-      licenses; we recommend you read them, as their terms may differ from the
-      terms above.
-
-<a id="22f51d3e8133cb84c9c410b8485c738362f6bf7ad6e2057f6eabc4b65442425f"></a>
-
-### [lodash](https://www.npmjs.com/package/lodash) (version 4.17.23)
 
 License tags: MIT
 
