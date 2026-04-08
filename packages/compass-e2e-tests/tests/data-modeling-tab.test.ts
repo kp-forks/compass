@@ -1,28 +1,30 @@
 import { expect } from 'chai';
-import type { CompassBrowser } from '../helpers/compass-browser';
+import type { CompassBrowser } from '../helpers/compass-browser.ts';
 import {
   init,
   cleanup,
   screenshotIfFailed,
   getDefaultConnectionNames,
-} from '../helpers/compass';
-import type { Compass } from '../helpers/compass';
-import * as Selectors from '../helpers/selectors';
+} from '../helpers/compass.ts';
+import type { Compass } from '../helpers/compass.ts';
+import * as Selectors from '../helpers/selectors.ts';
 import {
   createNestedDocumentsCollection,
   createNumbersStringCollection,
-} from '../helpers/mongo-clients';
+} from '../helpers/mongo-clients.ts';
 import {
   cleanUpDownloadedFile,
   waitForFileDownload,
-} from '../helpers/downloads';
+} from '../helpers/downloads.ts';
 import { readFileSync } from 'fs';
-import { recognize } from 'tesseract.js';
+import tesseract from 'tesseract.js';
 import toNS from 'mongodb-ns';
 import path from 'path';
 import os from 'os';
 import fs from 'fs/promises';
 import { Key, type ChainablePromiseElement } from 'webdriverio';
+
+const { recognize } = tesseract;
 
 type Node = {
   id: string;
