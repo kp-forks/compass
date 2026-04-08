@@ -419,6 +419,7 @@ describe('Data Modeling tab', function () {
       expect(positionAfterRedo).to.deep.equal(newPosition);
       // Open a new tab
       await browser.openNewTab();
+      await browser.$(Selectors.DiagramList).waitForDisplayed();
 
       // Open the saved diagram
       await browser.clickVisible(Selectors.DataModelsListItem(dataModelName));
@@ -429,6 +430,7 @@ describe('Data Modeling tab', function () {
 
       // Open a new tab
       await browser.openNewTab();
+      await browser.$(Selectors.DiagramList).waitForDisplayed();
 
       // Delete the saved diagram
       await browser.clickVisible(
@@ -473,6 +475,7 @@ describe('Data Modeling tab', function () {
 
       // Open the saved diagram in new tab
       await browser.openNewTab();
+      await browser.$(Selectors.DiagramList).waitForDisplayed();
       await browser.clickVisible(Selectors.DataModelsListItem(dataModelName));
       await browser.$(Selectors.DataModelEditor).waitForDisplayed();
 
