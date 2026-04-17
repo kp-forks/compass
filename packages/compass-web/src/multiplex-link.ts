@@ -1,5 +1,5 @@
 /**
- * MultiplexWebSocketTransport — single shared WebSocket per browser tab
+ * MultiplexLink uses a single shared WebSocket per browser tab
  * that multiplexes all MongoDB driver connections using BSON 5-tuple framing.
  *
  * Protocol frame layout (each WebSocket binary message):
@@ -45,16 +45,14 @@ export type ErrorHeader = { v: -1; er: string };
 export type SuccessHeader = { v: 1 };
 export type Header = (SuccessHeader | ErrorHeader) & Routing;
 
-type MultiplexWebSocketTransportOptions = {
+type LinkOptions = {
   /** Base URL for the WebSocket server, e.g. "ws://localhost:1337". */
   baseUrl?: string;
-  /** Source address to use in CONNECT frames. Defaults to "localhost". */
-  sourceAddress?: string;
   /** Logger to use for debugging. */
   logger?: Logger;
 };
 
-/** Callbacks called by the transport when events occur on a logical stream. */
+/** Callbacks called by the link when events occur on a logical stream. */
 export interface MultiplexSocketCallbacks {
   /** Called when payload bytes arrive from the server for this stream. */
   onData(data: Uint8Array): void;
@@ -102,6 +100,23 @@ export function buildFrame(header: Header, payload?: Uint8Array): Uint8Array {
   return frame;
 }
 
+/** Generates a string on each call: "a", "b", ..., "z", "aa", "ab", etc. */
+const getNextHostname = (function* getNextHostname() {
+  let i = 0;
+  while (true) {
+    let num = i;
+    let result = '';
+
+    do {
+      result = String.fromCharCode(97 + (num % 26)) + result;
+      num = ((num / 26) | 0) - 1;
+    } while (num >= 0);
+
+    yield result;
+    i += 1;
+  }
+})();
+
 /** Helper to add an event listener that can be easily disposed. */
 export function addEventListener<K extends keyof WebSocketEventMap>(
   eventTarget: WebSocket,
@@ -133,10 +148,11 @@ export function addEventListener(
  * Manages a single shared WebSocket connection for a browser tab and multiplexes
  * all MongoDB driver TCP connections over it using BSON 5-tuple framing.
  */
-export class MultiplexWebSocketTransport implements Disposable {
+export class Link implements Disposable {
   private ws: WebSocket | null = null;
   private readonly baseUrl: string;
-  private readonly sourceAddress: string;
+  /** Everytime we create a new WS (in connect), we create a new source address */
+  private sourceAddress!: string;
   private readonly logger?: Logger;
   private readonly sockets = new Map<number, MultiplexSocketCallbacks>();
   private disposableStack: DisposableStack | null = null;
@@ -147,21 +163,15 @@ export class MultiplexWebSocketTransport implements Disposable {
   private connectResolve: (() => void) | null = null;
   private connectReject: ((err: Error) => void) | null = null;
 
-  constructor({
-    baseUrl,
-    logger,
-    sourceAddress,
-  }: MultiplexWebSocketTransportOptions) {
+  constructor({ baseUrl, logger }: LinkOptions) {
     this.baseUrl = _wsUrlOverride ?? baseUrl ?? 'ws://localhost:1337';
-    this.sourceAddress = sourceAddress ?? 'localhost';
     this.logger = logger;
     this.logger?.log.info(
       this.logger?.mongoLogId(1_001_000_420),
       'COMPASS-WEB-MULTIPLEXING',
-      'MultiplexWebSocketTransport created',
+      'Link created',
       {
         baseUrl: this.baseUrl,
-        sourceAddress: this.sourceAddress,
       }
     );
   }
@@ -173,12 +183,12 @@ export class MultiplexWebSocketTransport implements Disposable {
   /** Open the shared WebSocket. Returns a promise that resolves when the connection is ready. */
   async connect(signal?: AbortSignal): Promise<void> {
     if (this.connectPromise) return this.connectPromise;
-    if (this.closed) throw new Error('Transport is closed');
+    if (this.closed) throw new Error('Link is closed');
 
-    this.connectPromise = new Promise<void>((resolve, reject) => {
-      this.connectResolve = resolve;
-      this.connectReject = reject;
-    });
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
+    this.connectPromise = promise;
+    this.connectResolve = resolve;
+    this.connectReject = reject;
 
     const dispose = addEventListener(signal, 'abort', (event) => {
       const reason: unknown = (event.target as AbortSignal).reason;
@@ -196,6 +206,16 @@ export class MultiplexWebSocketTransport implements Disposable {
     const ws = new WebSocket(this.url);
     ws.binaryType = 'arraybuffer';
     this.ws = ws;
+    this.sourceAddress = getNextHostname.next().value;
+
+    this.logger?.log.info(
+      this.logger?.mongoLogId(1_001_000_428),
+      'COMPASS-WEB-MULTIPLEXING',
+      'Link connecting to WS',
+      {
+        sa: this.sourceAddress,
+      }
+    );
 
     const disposableStack = new DisposableStack();
     disposableStack.use(
@@ -207,7 +227,7 @@ export class MultiplexWebSocketTransport implements Disposable {
     disposableStack.use(
       addEventListener(ws, 'message', this.onMessage.bind(this))
     );
-    disposableStack.defer(this.close.bind(this, 'Transport Disposed'));
+    disposableStack.defer(this.close.bind(this, 'Link Disposed'));
     this.disposableStack = disposableStack;
   }
 
@@ -218,7 +238,10 @@ export class MultiplexWebSocketTransport implements Disposable {
     this.logger?.log.info(
       this.logger?.mongoLogId(1_001_000_421),
       'COMPASS-WEB-MULTIPLEXING',
-      'WebSocket connection established'
+      'WebSocket connection established',
+      {
+        sourceAddress: this.sourceAddress,
+      }
     );
   }
 
@@ -233,6 +256,7 @@ export class MultiplexWebSocketTransport implements Disposable {
       {
         code: code,
         reason: reason,
+        sourceAddress: this.sourceAddress,
       }
     );
 
@@ -290,7 +314,7 @@ export class MultiplexWebSocketTransport implements Disposable {
    * will be invoked by the close event handler.
    */
   async registerSocket(
-    localPort: number,
+    sourcePort: number,
     callbacks: MultiplexSocketCallbacks
   ): Promise<void> {
     if (!this.isConnected()) {
@@ -300,25 +324,25 @@ export class MultiplexWebSocketTransport implements Disposable {
       this.logger?.mongoLogId(1_001_000_423),
       'COMPASS-WEB-MULTIPLEXING',
       'Registering socket',
-      { localPort }
+      { sourcePort, sourceAddress: this.sourceAddress }
     );
-    this.sockets.set(localPort, callbacks);
+    this.sockets.set(sourcePort, callbacks);
   }
 
   /** Remove callbacks for a logical stream (call after error or close). */
-  unregisterSocket(localPort: number): void {
+  unregisterSocket(sourcePort: number): void {
     this.logger?.log.info(
       this.logger?.mongoLogId(1_001_000_424),
       'COMPASS-WEB-MULTIPLEXING',
       'Unregistering socket',
-      { localPort }
+      { sourcePort, sourceAddress: this.sourceAddress }
     );
-    this.sockets.delete(localPort);
+    this.sockets.delete(sourcePort);
   }
 
   /** Send a data frame for an established logical stream. */
   sendData(
-    localPort: number,
+    sourcePort: number,
     destAddr: string,
     destPort: number,
     data: Uint8Array
@@ -326,7 +350,7 @@ export class MultiplexWebSocketTransport implements Disposable {
     const header: Header = {
       v: 1,
       sa: this.sourceAddress,
-      sp: localPort,
+      sp: sourcePort,
       da: destAddr,
       dp: destPort,
       sz: data.length,
@@ -339,7 +363,7 @@ export class MultiplexWebSocketTransport implements Disposable {
    * (either because the driver closed the connection or the cluster disconnected).
    */
   sendError(
-    localPort: number,
+    sourcePort: number,
     destAddr: string,
     destPort: number,
     errorMessage: string
@@ -347,7 +371,7 @@ export class MultiplexWebSocketTransport implements Disposable {
     const header: Header = {
       v: -1,
       sa: this.sourceAddress,
-      sp: localPort,
+      sp: sourcePort,
       da: destAddr,
       dp: destPort,
       sz: 0,
@@ -366,7 +390,7 @@ export class MultiplexWebSocketTransport implements Disposable {
         this.logger?.mongoLogId(1_001_000_425),
         'COMPASS-WEB-MULTIPLEXING',
         'Failed to send frame, WebSocket not open',
-        { readyState: this.ws?.readyState }
+        { readyState: this.ws?.readyState, sourceAddress: this.sourceAddress }
       );
     }
   }
@@ -377,8 +401,8 @@ export class MultiplexWebSocketTransport implements Disposable {
     this.logger?.log.info(
       this.logger?.mongoLogId(1_001_000_426),
       'COMPASS-WEB-MULTIPLEXING',
-      'Closing MultiplexWebSocketTransport',
-      { reason }
+      'Closing Link',
+      { reason, sourceAddress: this.sourceAddress }
     );
     this.closed = true;
     this.disposableStack?.dispose();
@@ -400,18 +424,16 @@ export class MultiplexWebSocketTransport implements Disposable {
   }
 
   [Symbol.dispose](): void {
-    this.close('Transport Disposed');
+    this.close('Link Disposed');
   }
 }
 
-let _activeTransport: MultiplexWebSocketTransport | null = null;
-export function setMultiplexTransport(
-  transport: MultiplexWebSocketTransport | null
-): void {
-  _activeTransport = transport;
+let _activeLink: Link | null = null;
+export function setMultiplexLink(link: Link | null): void {
+  _activeLink = link;
 }
-export function getMultiplexTransport(): MultiplexWebSocketTransport | null {
-  return _activeTransport;
+export function getMultiplexLink(): Link | null {
+  return _activeLink;
 }
 
 let _wsUrlOverride: string | null = null;
